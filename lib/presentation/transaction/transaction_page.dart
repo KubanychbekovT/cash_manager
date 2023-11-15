@@ -1,5 +1,6 @@
 import 'package:cash_manager/presentation/core/widgets/custom_scaffold.dart';
-import 'package:cash_manager/presentation/expense/expense_page.dart';
+import 'package:cash_manager/presentation/transaction/expense/expense_page.dart';
+import 'package:cash_manager/presentation/transaction/widgets/income_expense_chart.dart';
 import 'package:flutter/material.dart';
 
 
@@ -173,32 +174,34 @@ class _TransactionPageState extends State<TransactionPage>
                           ),
                         ),
                       )),
-                  // Positioned(
-                  //     top: 150,
-                  //     right: 0,
-                  //     left: 0,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: IncomeExpenseChart(),
-                  //     )),
+
+                  Positioned(
+                      top: 150,
+                      right: 0,
+                      left: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: IncomeExpenseChart(),
+                      )),
                 ],
               ),
             ),
-            SizedBox(
-                height: 50,
-                child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: TabBar(
-                        indicatorColor: Color(0xff86c1d2),
-                        labelStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
-                        unselectedLabelStyle: TextStyle(color: Colors.grey),
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        indicatorWeight: 3.0,
-                        // Set the indicator weight
-                        onTap: (index) {},
-                        isScrollable: true,
-                        controller: _tabController,
-                        tabs: tabs))),
+
+            // SizedBox(
+            //     height: 50,
+            //     child: SingleChildScrollView(
+            //         scrollDirection: Axis.horizontal,
+            //         child: TabBar(
+            //             indicatorColor: Color(0xff86c1d2),
+            //             labelStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+            //             unselectedLabelStyle: TextStyle(color: Colors.grey),
+            //             indicatorSize: TabBarIndicatorSize.tab,
+            //             indicatorWeight: 3.0,
+            //             // Set the indicator weight
+            //             onTap: (index) {},
+            //             isScrollable: true,
+            //             controller: _tabController,
+            //             tabs: tabs))),
     ]));
 
   }
