@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class IncomeExpenseChart extends StatelessWidget {
@@ -94,18 +93,3 @@ class IncomeExpenseChart extends StatelessWidget {
 }
 
 const chartMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-void main() {
-  runApp(
-    MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Income Expense Chart'),
-        ),
-        body: Center(
-          child: IncomeExpenseChart(),
-        ),
-      ),
-    ),
-  );
-}

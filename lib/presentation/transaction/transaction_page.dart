@@ -1,6 +1,7 @@
 import 'package:cash_manager/presentation/core/widgets/custom_scaffold.dart';
 import 'package:cash_manager/presentation/transaction/expense/expense_page.dart';
 import 'package:cash_manager/presentation/transaction/widgets/income_expense_chart.dart';
+import 'package:cash_manager/presentation/transaction/widgets/tab_bar.dart';
 import 'package:flutter/material.dart';
 
 
@@ -183,6 +184,11 @@ class _TransactionPageState extends State<TransactionPage>
                         padding: const EdgeInsets.all(8.0),
                         child: IncomeExpenseChart(),
                       )),
+                  Positioned(
+                      top: 380,
+                      right: 0,
+                      left: 0,
+                      child: CustomTabBar())
                 ],
               ),
             ),
