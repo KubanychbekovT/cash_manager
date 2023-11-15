@@ -1,3 +1,4 @@
+import 'package:cash_manager/presentation/transaction/transaction_page.dart';
 import 'package:flutter/material.dart';
 
 class AppWidget extends StatelessWidget {
@@ -8,6 +9,7 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cash Manager',
+      home: TransactionPage(),
     );
   }
 }

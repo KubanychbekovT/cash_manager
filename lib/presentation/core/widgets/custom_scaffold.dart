@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+
 class CustomScaffold extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final Widget body;
@@ -12,22 +14,30 @@ class CustomScaffold extends StatelessWidget {
   final Drawer? drawer;
   final bool hasBackButton;
   final double? titleSpacing;
-
-  const CustomScaffold(
-      {super.key, this.padding, required this.body, this.floatingActionButton, required this.isScrolling, this.appBarTitle, this.bottomNavigationBar, required this.useAppBar, required this.actions, this.drawer, required this.hasBackButton, this.titleSpacing});
-
+  const CustomScaffold({
+    Key? key,
+    required this.body,
+    this.floatingActionButton,
+    this.padding,
+    this.useAppBar = true,
+    this.bottomNavigationBar,
+    this.actions = const [],
+    this.isScrolling = false,
+    this.hasBackButton=true,
+    this.appBarTitle,
+    this.titleSpacing,
+    this.drawer
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
           drawer: drawer,
-          body: Padding(
-            padding: padding ?? const EdgeInsets.symmetric(horizontal: 5),
-            child: isScrolling ? SingleChildScrollView(
-              child: body,
-            )
-                : body,
-          ),
+          body: isScrolling
+              ? SingleChildScrollView(
+            child: body,
+          )
+              : body,
           bottomNavigationBar: bottomNavigationBar,
           floatingActionButton: floatingActionButton,
         ));
