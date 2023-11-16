@@ -1,5 +1,6 @@
 import 'package:cash_manager/presentation/core/widgets/custom_scaffold.dart';
 import 'package:cash_manager/presentation/transaction/expense/expense_page.dart';
+import 'package:cash_manager/presentation/transaction/widgets/custom_fab.dart';
 import 'package:cash_manager/presentation/transaction/widgets/income_expense_chart.dart';
 import 'package:cash_manager/presentation/transaction/widgets/tab_bar.dart';
 import 'package:cash_manager/presentation/transaction/widgets/type_of_expences.dart';
@@ -44,20 +45,7 @@ class _TransactionPageState extends State<TransactionPage>
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xff00b6e4),
-          onPressed: () {
-            showModalBottomSheet(
-                context: context,
-                isDismissible: false,
-                shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20))),
-                isScrollControlled: true,
-                builder: (BuildContext context) => ExpensePage());
-          },
-          child: Icon(Icons.add),
-        ),
+        floatingActionButton: CustomFAB(),
         body: Column(children: [
           Expanded(
             child: Stack(
@@ -188,11 +176,7 @@ class _TransactionPageState extends State<TransactionPage>
                       child: IncomeExpenseChart(),
                     )),
                 Positioned(top: 380, right: 0, left: 0, child: CustomTabBar()),
-                Positioned(
-                    top: 450,
-                    right: 0,
-                    left: 0,
-                    child: TypeOfExpences())
+
               ],
             ),
           ),
