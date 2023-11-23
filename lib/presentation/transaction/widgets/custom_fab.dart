@@ -1,5 +1,6 @@
 import 'package:cash_manager/presentation/core/utils/bottom_sheet_helpers.dart';
 import 'package:cash_manager/presentation/transaction/expense/expense_page.dart';
+import 'package:cash_manager/presentation/transaction/income/income_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -30,14 +31,13 @@ class CustomFAB extends StatelessWidget {
           child: Icon(Icons.attach_money, color: Color(0xff0039a5)),
           backgroundColor: Colors.white,
           onTap: () {
-            showCustomModalBottomSheet(context, ExpensePage());
+            showCustomModalBottomSheet(context, IncomePage());
           },
           label: 'Income',
           labelStyle: TextStyle(
             fontWeight: FontWeight.w500, color: Colors.black,
           ),
         ),
-
       ],
     );
   }
