@@ -11,8 +11,10 @@
 import 'package:cash_manager/application/expense/expense_form_cubit.dart'
     as _i3;
 import 'package:cash_manager/application/income/income_form_cubit.dart' as _i5;
-import 'package:cash_manager/application/transaction/transaction_watcher/transaction_watcher_cubit.dart'
+import 'package:cash_manager/application/transaction/transaction_filter/transaction_filter_cubit.dart'
     as _i6;
+import 'package:cash_manager/application/transaction/transaction_watcher/transaction_watcher_cubit.dart'
+    as _i7;
 import 'package:cash_manager/domain/transaction/i_transaction_repository.dart'
     as _i4;
 import 'package:get_it/get_it.dart' as _i1;
@@ -33,8 +35,9 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i3.ExpenseFormCubit(gh<_i4.ITransactionRepository>()));
     gh.factory<_i5.IncomeFormCubit>(
         () => _i5.IncomeFormCubit(gh<_i4.ITransactionRepository>()));
-    gh.factory<_i6.TransactionWatcherCubit>(
-        () => _i6.TransactionWatcherCubit(gh<_i4.ITransactionRepository>()));
+    gh.factory<_i6.TransactionFilterCubit>(() => _i6.TransactionFilterCubit());
+    gh.factory<_i7.TransactionWatcherCubit>(
+        () => _i7.TransactionWatcherCubit(gh<_i4.ITransactionRepository>()));
     return this;
   }
 }
