@@ -1,28 +1,66 @@
 import 'package:bloc/bloc.dart';
+import 'package:cash_manager/domain/transaction/i_transaction_repository.dart';
+import 'package:cash_manager/domain/transaction/income/income.dart';
+import 'package:cash_manager/domain/transaction/transaction_failure.dart';
+import 'package:cash_manager/domain/transaction/value_objects.dart';
+import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
-import 'package:meta/meta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'income_form_state.dart';
-part 'income_form_cubit.freezed.dart';
 
+part 'income_form_cubit.freezed.dart';
 
 @injectable
 class IncomeFormCubit extends Cubit<IncomeFormState> {
-  IncomeFormCubit() : super(IncomeFormState.initial());
+  final ITransactionRepository transactionRepository;
 
-  void nameChanged(String name) {
-    emit(state.copyWith(name: name));
-    print('Hello');
+  IncomeFormCubit(this.transactionRepository)
+      : super(IncomeFormState.initial());
+
+  void initialize(Income? income) {
+    emit(state.copyWith(income: income ?? Income.empty()));
   }
 
-  void amountChanged(int amount) {
-    emit(state.copyWith(amount: amount));
+  void amountChanged(String amount) {
+    emit(state.copyWith(
+        income:
+            state.income.copyWith(amount: Amount(double.tryParse(amount) ?? 0)),
+        authFailureSuccessOption: none()));
   }
 
-  void sendData() {
-    // Здесь можно выполнить необходимые действия для передачи данных на другую страницу
-    // Например, использовать Navigator.push для перехода на другую страницу
-    // И передать данные через конструктор или методы на этой новой странице
+  void nameChanged(String incomeName) {
+    emit(state.copyWith(
+        income: state.income.copyWith(name: TransactionName(incomeName)),
+        authFailureSuccessOption: none()));
+  }
+
+  createIncome() async {
+    if (state.income.failureOption.isNone()) {
+      final value = await transactionRepository.createIncome(state.income);
+      emit(state.copyWith(
+          authFailureSuccessOption:
+              some(value.fold((f) => left(f), (_) => right(unit)))));
+    }
+    emit(state.copyWith(showErrorMessages: true));
+  }
+
+  Future<void> updateIncome(Income oldIncome) async {
+    if (state.income.failureOption.isNone()) {
+      final value = await transactionRepository.createIncome(state.income);
+      emit(state.copyWith(
+          authFailureSuccessOption:
+              some(value.fold((f) => left(f), (_) => right(unit)))));
+    }
+    emit(state.copyWith(showErrorMessages: true));
+  }
+
+  Future<void> deleteIncome(Income income) async {
+    if (state.income.failureOption.isNone()) {
+      final value = await transactionRepository.deleteIncome(income);
+      emit(state.copyWith(
+          authFailureSuccessOption:
+              some(value.fold((f) => left(f), (_) => right(unit)))));
+    }
   }
 }
