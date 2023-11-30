@@ -7,23 +7,24 @@ part 'expense_dto.freezed.dart';
 part 'expense_dto.g.dart';
 
 @freezed
-
 abstract class ExpenseDto implements _$ExpenseDto {
   ExpenseDto._();
   @HiveType(typeId: 0)
   factory ExpenseDto({
     @HiveField(3)
-  required String expenseName,
+    required String expenseName,
     @HiveField(4)
-  required int category,
+    required int category,
     @HiveField(0)
-  required double amount,
+    required double amount,
     @HiveField(1)
-  required DateTime date,
-}) = _ExpenseDto;
+    required DateTime date,
+  }) = _ExpenseDto;
 
-  factory ExpenseDto.fromDomain(Expense expense) => ExpenseDto(expenseName: expense.name.getOrCrash(), category: expense.category, amount: expense.amount.getOrCrash(), date: expense.date);
+  factory ExpenseDto.fromDomain(Expense expense) =>
+      ExpenseDto(expenseName:expense.name.getOrCrash(),
+          category:expense.category,amount:expense.amount.getOrCrash(), date: expense.date);
   Expense toDomain() {
-    return Expense(name: TransactionName(expenseName), category: category, amount: Amount(amount), date: date);
+    return Expense(name: TransactionName(expenseName),category: category,amount: Amount(amount),date: date);
   }
 }

@@ -9,12 +9,12 @@ import 'package:http/http.dart' as http;
 abstract class AppInjectableProdModule {
   @lazySingleton
   http.Client get httpClient => http.Client();
+
   @preResolve
-  @Named('income')
-  Future<Box<IncomeDto>> get incomeBox =>
-      Hive.openBox('income');
+  @Named("income")
+  Future<Box<IncomeDto>> get incomeBox => Hive.openBox("income");
+
   @preResolve
-  @Named('expense')
-  Future<Box<ExpenseDto>> get expenseBox =>
-      Hive.openBox('expense');
+  @Named("expense")
+  Future<Box<ExpenseDto>> get expenseBox => Hive.openBox("expense");
 }

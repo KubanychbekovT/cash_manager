@@ -47,7 +47,8 @@ class IncomeFormCubit extends Cubit<IncomeFormState> {
 
   Future<void> updateIncome(Income oldIncome) async {
     if (state.income.failureOption.isNone()) {
-      final value = await transactionRepository.createIncome(state.income);
+      final value =
+          await transactionRepository.updateIncome(oldIncome, state.income);
       emit(state.copyWith(
           authFailureSuccessOption:
               some(value.fold((f) => left(f), (_) => right(unit)))));
@@ -62,5 +63,6 @@ class IncomeFormCubit extends Cubit<IncomeFormState> {
           authFailureSuccessOption:
               some(value.fold((f) => left(f), (_) => right(unit)))));
     }
+    emit(state.copyWith(showErrorMessages: true));
   }
 }

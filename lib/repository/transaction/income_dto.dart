@@ -12,16 +12,17 @@ abstract class IncomeDto implements _$IncomeDto {
   @HiveType(typeId: 1)
   factory IncomeDto({
     @HiveField(3)
-  required String incomeName,
+    required String incomeName,
     @HiveField(0)
-  required double amount,
+    required double amount,
     @HiveField(1)
-  required DateTime date,
-}) = _IncomeDto;
+    required DateTime date,
+  }) = _IncomeDto;
 
   factory IncomeDto.fromDomain(Income income) =>
-      IncomeDto(incomeName: income.name.getOrCrash(), amount: income.amount.getOrCrash(), date: income.date);
+      IncomeDto(incomeName:income.name.getOrCrash(),
+          amount:income.amount.getOrCrash(), date: income.date);
   Income toDomain() {
-    return Income(name: TransactionName(incomeName), amount: Amount(amount), date: date);
+    return Income(name: TransactionName(incomeName),amount: Amount(amount),date: date);
   }
 }

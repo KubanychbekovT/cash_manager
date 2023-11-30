@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cash_manager/application/transaction/transaction_watcher/transaction_watcher_cubit.dart';
 import 'package:cash_manager/domain/transaction/category.dart';
 import 'package:cash_manager/domain/transaction/expense/expense.dart';
@@ -10,14 +8,13 @@ import 'package:cash_manager/presentation/core/widgets/custom_scaffold.dart';
 import 'package:cash_manager/presentation/detail/widgets/category_expense_stat.dart';
 import 'package:cash_manager/presentation/detail/widgets/flow_card.dart';
 import 'package:cash_manager/presentation/detail/widgets/horizontal_expense_chart.dart';
-import 'package:dartz/dartz.dart';
+import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rxdart/rxdart.dart';
 
 class DetailPage extends StatelessWidget {
-  const DetailPage({super.key});
+  const DetailPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +29,7 @@ class DetailPage extends StatelessWidget {
               height: MediaQuery.of(context).size.height / 3,
               color: Color(0xff0039a5),
               child: Padding(
-                padding: EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(12.0),
                 child: Column(
                   children: [
                     SizedBox(
@@ -47,7 +44,7 @@ class DetailPage extends StatelessWidget {
                               onPressed: () {
                                 context.pop();
                               },
-                              icon: Icon(Icons.arrow_back_ios_new_outlined),
+                              icon: Icon(Icons.arrow_back_ios_outlined),
                               color: Colors.white,
                             ),
                           ),
@@ -55,7 +52,7 @@ class DetailPage extends StatelessWidget {
                         Expanded(
                           child: Center(
                             child: Text(
-                              'Details',
+                              "Details",
                               style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -74,7 +71,7 @@ class DetailPage extends StatelessWidget {
                         CircleAvatar(
                             backgroundColor: Color(0xff00b5e6),
                             child: Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Icon(
                                 Icons.account_balance_wallet_outlined,
                                 color: Colors.white,
@@ -87,41 +84,53 @@ class DetailPage extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('\$'.toUpperCase(),
+                            Text('total amount'.toUpperCase(),
                                 style: TextStyle(
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.grey)),
-                            BlocBuilder<TransactionWatcherCubit,
-                                TransactionWatcherState>(
-                              builder: (context, state) {
-                                return Text(
-                                  state.maybeMap(
-                                      loadSuccess: (state) {
-                                        final transactions =
-                                            convertEitherToTransactionList(
-                                                state.transactionData);
-                                        final expenseIncomeTotal =
-                                            calculateExpenseIncomeTotal(
-                                                transactions);
-                                        final balance =
-                                            expenseIncomeTotal.value2 -
-                                                expenseIncomeTotal.value1
-                                                    .toDouble();
-                                        return formatBalance(balance);
-                                      },
-                                      orElse: () => '0'),
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                );
-                              },
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('\$'.toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey)),
+                                BlocBuilder<TransactionWatcherCubit,
+                                    TransactionWatcherState>(
+                                  builder: (context, state) {
+                                    return Text(
+                                      state.maybeMap(
+                                        loadSuccess: (state) {
+                                          final transactions =
+                                              convertEitherToTransactionList(
+                                                  state.transactionData);
+                                          final expenseIncomeTotal =
+                                              calculateExpenseIncomeTotal(
+                                                  transactions);
+                                          final balance =
+                                              expenseIncomeTotal.value2 -
+                                                  expenseIncomeTotal.value1
+                                                      .toDouble();
+                                          return formatBalance(balance);
+                                        },
+                                        orElse: () => '0',
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
                             )
                           ],
-                        )
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -131,7 +140,7 @@ class DetailPage extends StatelessWidget {
             right: 0,
             left: 0,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -167,27 +176,31 @@ class DetailPage extends StatelessWidget {
                                         height: 10,
                                       ),
                                       Text(
-                                        'Outflow detail',
+                                        "Outflow detail",
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500,
                                             color: Colors.black),
                                       ),
                                       Text(
-                                        'You can check where your money come and gone here',
+                                        "You can check where your money come and gone here",
                                         style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
                                             color: Colors.grey),
                                       ),
-                                      SizedBox(height: 10),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       HorizontalExpenseChart(
                                           values:
                                               top4Categories.values.toList(),
                                           colors: top4Categories.keys
                                               .map((category) => category.color)
                                               .toList()),
-                                      SizedBox(height: 10),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Row(
                                         children: [
                                           CategoryExpenseStat(
@@ -197,7 +210,7 @@ class DetailPage extends StatelessWidget {
                                           CategoryExpenseStat(
                                               index: 1,
                                               length: top4Categories.length,
-                                              top4Categories: top4Categories),
+                                              top4Categories: top4Categories)
                                         ],
                                       ),
                                       SizedBox(height: 10),
@@ -210,18 +223,18 @@ class DetailPage extends StatelessWidget {
                                           CategoryExpenseStat(
                                               index: 3,
                                               length: top4Categories.length,
-                                              top4Categories: top4Categories),
+                                              top4Categories: top4Categories)
                                         ],
-                                      )
+                                      ),
                                     ],
                                   );
                           },
                           orElse: () => SizedBox());
                     },
-                  )
+                  ),
                 ],
               ),
-            ))
+            )),
       ],
     ));
   }
@@ -229,6 +242,7 @@ class DetailPage extends StatelessWidget {
   Map<Category, int> getTop4Categories(List<Expense> expenses) {
     Map<int, int> categoryTotals = {};
 
+    // Calculate the total amount for each category
     for (var expense in expenses) {
       int category = expense.category;
       int amount = expense.amount.getOrCrash().toInt();
@@ -239,9 +253,11 @@ class DetailPage extends StatelessWidget {
       }
     }
 
+    // Sort the categories by total amount
     List<MapEntry<int, int>> sortedCategories = categoryTotals.entries.toList()
       ..sort((a, b) => b.value - a.value);
 
+    // Take the top 4 categories
     Map<Category, int> top4Categories = {};
     for (int i = 0; i < sortedCategories.length && i < 4; i++) {
       int category = sortedCategories[i].key;
@@ -249,6 +265,7 @@ class DetailPage extends StatelessWidget {
       Category categoryName = Expense.categories[category];
       top4Categories[categoryName] = totalAmount;
     }
+
     return top4Categories;
   }
 }

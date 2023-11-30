@@ -1,10 +1,20 @@
+import 'package:cash_manager/application/transaction/transaction_filter/transaction_filter_cubit.dart';
+import 'package:cash_manager/application/transaction/transaction_watcher/transaction_watcher_cubit.dart';
+import 'package:cash_manager/domain/core/transaction.dart';
+import 'package:cash_manager/presentation/core/constants.dart';
+import 'package:cash_manager/presentation/core/utils/bottom_sheet_helpers.dart';
+import 'package:cash_manager/presentation/core/utils/transaction_utils.dart';
+import 'package:cash_manager/presentation/core/widgets/critical_failure_card.dart';
+import 'package:cash_manager/presentation/core/widgets/custom_progress_indicator.dart';
 import 'package:cash_manager/presentation/core/widgets/custom_scaffold.dart';
 import 'package:cash_manager/presentation/transaction/expense/expense_page.dart';
+import 'package:cash_manager/presentation/transaction/income/income_page.dart';
 import 'package:cash_manager/presentation/transaction/widgets/custom_fab.dart';
 import 'package:cash_manager/presentation/transaction/widgets/income_expense_chart.dart';
-import 'package:cash_manager/presentation/transaction/widgets/tab_bar.dart';
-import 'package:cash_manager/presentation/transaction/widgets/type_of_expences.dart';
+import 'package:cash_manager/presentation/transaction/widgets/top_bar.dart';
+import 'package:cash_manager/presentation/transaction/widgets/transaction_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TransactionPage extends StatefulWidget {
   const TransactionPage({Key? key}) : super(key: key);
@@ -15,187 +25,164 @@ class TransactionPage extends StatefulWidget {
 
 class _TransactionPageState extends State<TransactionPage>
     with SingleTickerProviderStateMixin {
-  late final _tabController;
-  final List<String> months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-  ];
-  late final List<Tab> tabs = months
-      .map((e) => Tab(
-            text: e,
-          ))
-      .toList();
+  late final TabController _tabController;
+  late final List<Tab> tabs = _buildMonthTabs();
 
   @override
   void initState() {
-    _tabController = TabController(vsync: this, length: 12);
+    _tabController = TabController(
+        vsync: this, length: 12, initialIndex: (DateTime.now().month - 1));
     super.initState();
+  }
+
+  List<Tab> _buildMonthTabs() {
+    return months.map((month) => Tab(text: month)).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-        floatingActionButton: CustomFAB(),
-        body: Column(children: [
-          Expanded(
-            child: Stack(
-              children: [
-                Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      color: Color(0xff0039a5),
+        floatingActionButton: const CustomFAB(),
+        body: Column(
+          children: [
+            SizedBox(
+              height: 360,
+              child: Stack(
+                clipBehavior: Clip.antiAlias,
+                children: [
+                  Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 184,
+                        padding: EdgeInsets.all(12.0),
+                        color: const Color(0xff0039a5),
+                        child: TopBar(),
+                      )),
+                  const Positioned(
+                      top: 160,
+                      right: 0,
+                      left: 0,
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Hi, Temirlan",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      ),
-                                      Text(
-                                        "Good morning",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Spacer(),
-                                Icon(
-                                  Icons.notifications,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                    backgroundColor: Color(0xff00b5e6),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.account_balance_wallet_outlined,
-                                        color: Colors.white,
-                                        size: 24,
-                                      ),
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('total amount'.toUpperCase(),
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey)),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text('\$'.toUpperCase(),
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey)),
-                                        Text(
-                                          '2,400',
-                                          style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                Spacer(),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.4),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Text(
-                                    "View detail",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 100,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )),
-                Positioned(
-                    top: 150,
-                    right: 0,
-                    left: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IncomeExpenseChart(),
-                    )),
-                Positioned(top: 380, right: 0, left: 0, child: CustomTabBar()),
-
-              ],
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child:
+                            SizedBox(height: 200, child: IncomeExpenseChart()),
+                      )),
+                ],
+              ),
             ),
-          ),
+            SizedBox(
+                height: 50,
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: TabBar(
+                        indicatorColor: const Color(0xff86c1d2),
+                        labelStyle: const TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                        unselectedLabelStyle:
+                            const TextStyle(color: Colors.grey),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicatorWeight: 3.0,
+                        onTap: (index) {
+                          // Change month
+                          context
+                              .read<TransactionFilterCubit>()
+                              .monthIndexChanged(index + 1,
+                                  context.read<TransactionWatcherCubit>());
+                        },
+                        isScrollable: true,
+                        controller: _tabController,
+                        tabs: tabs))),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                color: const Color(0xfff2f7fa),
+                child: BlocBuilder<TransactionWatcherCubit,
+                    TransactionWatcherState>(
+                  builder: (context, state) {
+                    return state.map(
+                        initial: (_) => const SizedBox(),
+                        loadInProgress: (_) => const CustomProgressIndicator(),
+                        loadSuccess: (successState) {
+                          // Updates data for filtering when new raw data is fetched
+                          context
+                              .read<TransactionFilterCubit>()
+                              .updateTransactionList(
+                                  successState.transactionData);
+                          return BlocBuilder<TransactionFilterCubit,
+                              TransactionFilterState>(
+                            builder: (context, state) {
+                              final transactions = state.transactions;
+                              if (transactions.isNotEmpty) {
+                                return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: transactions.length,
+                                    itemBuilder: (context, index) {
+                                      // Transforms expenses and incomes into a list of Transactions
+                                      final transactions =
+                                          convertEitherToTransactionList(
+                                              state.transactions);
+                                      final transaction = transactions[index];
+                                      // Checks if previous transaction is on the same day
+                                      final isPreviousSameDay =
+                                          isSameDayAsPrevious(
+                                              index, transactions);
+                                      // Checks if next transaction is on the same day
+                                      final isNextSameDay = isSameDayAsPrevious(
+                                          index, transactions);
+                                      return TransactionCard(
+                                          isPreviousSameDay: isPreviousSameDay,
+                                          onClicked: () {
+                                            showCustomModalBottomSheet(
+                                                context,
+                                                state.transactions[index].fold(
+                                                    (expense) => ExpensePage(
+                                                        expense: expense),
+                                                    (income) => IncomePage(
+                                                          income: income,
+                                                        )));
+                                          },
+                                          isNextSameDay: isNextSameDay,
+                                          transaction: transaction);
+                                    });
+                              } else {
+                                return Container(
+                                    margin: const EdgeInsets.only(top: 20),
+                                    alignment: Alignment.topCenter,
+                                    child: Text(
+                                      "There are no transactions for the selected period.",
+                                      style: TextStyle(color: Colors.grey[700]),
+                                    ));
+                              }
+                            },
+                          );
+                        },
+                        loadFailure: (_) => const CriticalFailureCard());
+                  },
+                ),
+              ),
+            )
+          ],
+        ));
+  }
 
-          // SizedBox(
-          //     height: 50,
-          //     child: SingleChildScrollView(
-          //         scrollDirection: Axis.horizontal,
-          //         child: TabBar(
-          //             indicatorColor: Color(0xff86c1d2),
-          //             labelStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
-          //             unselectedLabelStyle: TextStyle(color: Colors.grey),
-          //             indicatorSize: TabBarIndicatorSize.tab,
-          //             indicatorWeight: 3.0,
-          //             // Set the indicator weight
-          //             onTap: (index) {},
-          //             isScrollable: true,
-          //             controller: _tabController,
-          //             tabs: tabs))),
-        ]));
+  bool isSameDayAsPrevious(int index, List<Transaction> transactionList) {
+    if (index == 0) {
+      return false;
+    }
+    final previousTransaction = transactionList[index - 1];
+    final currentTransaction = transactionList[index];
+    return previousTransaction.date.day == currentTransaction.date.day;
+  }
+
+  bool isSameDayAsNext(int index, List<Transaction> transactionList) {
+    if (index == transactionList.length - 1) {
+      return false;
+    } else {
+      final nextTransaction = transactionList[index + 1];
+      final currentTransaction = transactionList[index];
+      return nextTransaction.date.day == currentTransaction.date.day;
+    }
   }
 }
